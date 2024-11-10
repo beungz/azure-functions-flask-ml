@@ -1,0 +1,113 @@
+<html>
+<body>
+  <h3>Income Prediction Form</h3>
+
+<div>
+  <form action="{{ url_for('index') }}" method="POST">
+    <label for="age">Age</label>
+    <input type="text" id="age" name="age" value="{{ age }}">
+    <br>
+    <label for="w_class">Working Class</label>
+    <select id="w_class" name="w_class">
+      {% for key in mapping_dict_swap['workclass'] %}
+      {% if key != "0" %}
+      <option value="{{key}}" {% if key == w_class %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['workclass'][key]}}
+      </option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <br>
+    <label for="edu">Education</label>
+    <select id="edu" name="edu">
+      {% for key in mapping_dict_swap['education'] %}
+      <option value="{{key}}" {% if key == edu %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['education'][key]}}
+      </option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="martial_stat">Marital Status</label>
+    <select id="martial_stat" name="martial_stat">
+      {% for key in mapping_dict_swap['marital-status'] %}
+      <option value="{{key}}" {% if key == martial_stat %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['marital-status'][key]}}
+      </option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="occup">Occupation</label>
+    <select id="occup" name="occup">
+      {% for key in mapping_dict_swap['occupation'] %}
+      {% if key != "0" %}
+      <option value="{{key}}" {% if key == occup %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['occupation'][key]}}
+      </option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <br>
+    <label for="relation">Relationship</label>
+    <select id="relation" name="relation">
+      {% for key in mapping_dict_swap['relationship'] %}
+      <option value="{{key}}" {% if key == relation %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['relationship'][key]}}
+      </option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="race">Race</label>
+    <select id="race" name="race">
+      {% for key in mapping_dict_swap['race'] %}
+      <option value="{{key}}" {% if key == race %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['race'][key]}}
+      </option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender">
+      {% for key in mapping_dict_swap['gender'] %}
+      <option value="{{key}}" {% if key == gender %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['gender'][key]}}
+      </option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="c_gain">Capital Gain </label>
+    <input type="text" id="c_gain" name="c_gain" value="{{ c_gain }}">btw:[0-99999]
+    <br>
+    <label for="c_loss">Capital Loss </label>
+    <input type="text" id="c_loss" name="c_loss" value="{{ c_loss }}">btw:[0-4356]
+    <br>
+    <label for="hours_per_week">Hours per Week </label>
+    <input type="text" id="hours_per_week" name="hours_per_week" value="{{ hours_per_week }}">btw:[1-99]
+    <br>
+    <label for="native_country">Native Country</label>
+    <select id="native_country" name="native_country">
+      {% for key in mapping_dict_swap['native-country'] %}
+      {% if key != "0" %}
+      <option value="{{key}}" {% if key == native_country %} selected="selected" {% endif %}>
+         {{mapping_dict_swap['native-country'][key]}}
+      </option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <br>
+    <br>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+<br>
+<br>
+<div class="prediction">
+  <h3>Prediction</h3>
+    	<br> 
+      <b>Predicted income:</b>
+      {{ prediction }}
+    <br>
+</div>
+
+</body>
+</html>
