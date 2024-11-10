@@ -88,7 +88,7 @@ def index():
         native_country = request.form['native_country']
 
         # Make DataFrame for model
-        to_predict_list = request.form.to_dict()
+        to_predict_list = {'age': age, 'workclass': w_class, 'education': edu, 'marital-status': martial_stat, 'occupation': occup, 'relationship': relation, 'race': race, 'gender': gender, 'capital-gain': c_gain, 'capital-loss': c_loss, 'hours-per-week': hours_per_week, 'native-country': native_country}
         to_predict_list=list(to_predict_list.values())
         to_predict_list = list(map(int, to_predict_list))
         predicted_result = ValuePredictor(to_predict_list)
