@@ -17,24 +17,24 @@ import os
 url = "adult.csv"
 df = pd.read_csv(url)
 
-# filling missing values
+# Fill missing values
 col_names = df.columns
 for c in col_names:
     df[c] = df[c].replace("?", np.nan)
 df = df.apply(lambda x:x.fillna(x.value_counts().index[0]))
 
-#discretisation
+# Discretisation
 df.replace(['Divorced', 'Married-AF-spouse', 
               'Married-civ-spouse', 'Married-spouse-absent', 
               'Never-married','Separated','Widowed'],
              ['divorced','married','married','married',
               'not married','not married','not married'], inplace = True)
 
-#label Encoder
+# Label Encoder
 category_col =['workclass', 'race', 'education','marital-status', 'occupation','relationship', 'gender', 'native-country', 'income'] 
 labelEncoder = preprocessing.LabelEncoder()
 
-# creating a map of all the numerical values of each categorical labels.
+# Create a map of all the numerical values of each categorical labels.
 mapping_dict={}
 for col in category_col:
     df[col] = labelEncoder.fit_transform(df[col])
@@ -45,7 +45,7 @@ mapping_dict_swap={}
 for key, value in mapping_dict.items():
     mapping_dict_swap[key] = {str(v): k for k, v in mapping_dict[key].items()}
 
-#droping redundant columns
+# Drop redundant columns
 df=df.drop(['fnlwgt','educational-num'], axis=1)
 
 X = df.values[:, 0:12]
@@ -55,7 +55,7 @@ X_train, X_test, y_train, y_test = train_test_split( X, Y, test_size = 0.3, rand
 dt_clf_gini = DecisionTreeClassifier(criterion = "gini", random_state = 100,max_depth=5, min_samples_leaf=5)
 dt_clf_gini.fit(X_train, y_train)
 
-# Save the model
+# Save the model to model.joblib
 local_path = tempfile.gettempdir()
 filepath = os.path.join(local_path, 'model.joblib')
 joblib.dump(dt_clf_gini, filepath)
@@ -63,17 +63,18 @@ joblib.dump(dt_clf_gini, filepath)
 
 
 """SECTION 2: Flask App and Inference"""
-#creating instance of the class
+# Create Flask object "flask_app"
 flask_app = Flask(__name__)
 
 @flask_app.route('/', methods=['GET', 'POST'])
 def index():
+    # Render index.html
     if request.method == 'GET':
-        # Just render the initial form, to get input
+        # If it is GET, render the initial form, to get input from user
         return render_template("index.html", mapping_dict_swap=mapping_dict_swap)
     
-    if request.method == 'POST':
-        # Extract the input
+    if (request.method == 'POST') & (request.form['button'] == 'submit'):
+        # If it is POST and submit button is pressed, extract the input, execute prediction function, then render index.html with prediction output, while retain the current form input
         age = request.form['age']
         w_class = request.form['w_class']
         edu = request.form['edu']
@@ -87,7 +88,7 @@ def index():
         hours_per_week = request.form['hours_per_week']
         native_country = request.form['native_country']
 
-        # Make DataFrame for model
+        # Make dataFrame for model
         to_predict_list = {'age': age, 'workclass': w_class, 'education': edu, 'marital-status': martial_stat, 'occupation': occup, 'relationship': relation, 'race': race, 'gender': gender, 'capital-gain': c_gain, 'capital-loss': c_loss, 'hours-per-week': hours_per_week, 'native-country': native_country}
         to_predict_list=list(to_predict_list.values())
         to_predict_list = list(map(int, to_predict_list))
@@ -103,17 +104,20 @@ def index():
                                     prediction=prediction,
                                     mapping_dict_swap=mapping_dict_swap
                                     )
+    
+    if (request.method == 'POST') & (request.form['button'] == 'clear'):
+        # If it is POST and clear button is pressed, then reset the form
+        return render_template("index.html", mapping_dict_swap=mapping_dict_swap)
 
-#prediction function
+
 def ValuePredictor(to_predict_list):
+    """Prediction function"""
     to_predict = np.array(to_predict_list).reshape(1,12)
     # Load the pre-trained model
     loaded_model = joblib.load(filepath)
     result = loaded_model.predict(to_predict)
     return result[0]
 
-
-# app = func.WsgiFunctionApp(app=flask_app.wsgi_app, http_auth_level=func.AuthLevel.ANONYMOUS)
 
 if __name__ == "__main__":
 	flask_app.run()

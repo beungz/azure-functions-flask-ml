@@ -3,27 +3,36 @@
 <body>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script type="text/javascript">
+    function ResetInput() {
+        document.getElementById("income-prediction-form").reset();
+        document.getElementById("predicted-income").value=""
+    }
+</script>
 <br>
 
 <div class="content">
 
 <div class="card">
     <h2 class="form-header">Income Prediction Form</h2>
-    <form action="{{ url_for('index') }}" method="POST">
+    <form  id="income-prediction-form" action="{{ url_for('index') }}" method="POST">
 
         <div class="form-row">
 
             <div class="form-col">
                 <div>
                     <label for="age">Age</label>
-                    <input type="text" id="age" name="age" class="form-control" placeholder="Enter age in years" required value="{{ age }}">
+                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age in years" required value="{{ age }}" min="0" max="200" step="1">
                 </div>
             </div>
 
             <div class="form-col">
                 <div>  
                     <label for="gender">Gender</label>
-                    <select id="gender" name="gender" class="form-control">
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="" hidden>
+                            Specify gender
+                        </option>
                         {% for key in mapping_dict_swap['gender'] %}
                         <option value="{{key}}" {% if key == gender %} selected="selected" {% endif %}>
                            {{mapping_dict_swap['gender'][key]}}
@@ -41,7 +50,10 @@
             <div class="form-col">
                 <div>   
                     <label for="edu">Education</label>
-                    <select id="edu" name="edu" class="form-control">
+                    <select id="edu" name="edu" class="form-control" required>
+                        <option value="" hidden>
+                            Select education level
+                        </option>
                         {% for key in mapping_dict_swap['education'] %}
                         <option value="{{key}}" {% if key == edu %} selected="selected" {% endif %}>
                            {{mapping_dict_swap['education'][key]}}
@@ -54,7 +66,7 @@
             <div class="form-col">
                 <div>  
                     <label for="hours_per_week">Hours per Week </label>
-                    <input type="text" id="hours_per_week" name="hours_per_week" class="form-control" placeholder="Enter number of hours, from 0 to 99" required value="{{ hours_per_week }}">
+                    <input type="number" id="hours_per_week" name="hours_per_week" class="form-control" placeholder="Enter number of hours, from 0 to 99" required value="{{ hours_per_week }}" min="0" max="99" step="1">
                 </div>
             </div>
 
@@ -66,7 +78,10 @@
             <div class="form-col">
                 <div>    
                     <label for="w_class">Working Class</label>
-                    <select id="w_class" name="w_class" class="form-control">
+                    <select id="w_class" name="w_class" class="form-control" required>
+                        <option value="" hidden>
+                            Select type of employer
+                        </option>
                         {% for key in mapping_dict_swap['workclass'] %}
                         {% if key != "0" %}
                         <option value="{{key}}" {% if key == w_class %} selected="selected" {% endif %}>
@@ -81,7 +96,10 @@
             <div class="form-col">
                 <div>        
                     <label for="occup">Occupation</label>
-                    <select id="occup" name="occup" class="form-control">
+                    <select id="occup" name="occup" class="form-control" required>
+                        <option value="" hidden>
+                            Pick occupation from the list
+                        </option>
                         {% for key in mapping_dict_swap['occupation'] %}
                         {% if key != "0" %}
                         <option value="{{key}}" {% if key == occup %} selected="selected" {% endif %}>
@@ -101,7 +119,10 @@
             <div class="form-col">
                 <div>       
                     <label for="martial_stat">Marital Status</label>
-                    <select id="martial_stat" name="martial_stat" class="form-control">
+                    <select id="martial_stat" name="martial_stat" class="form-control" required>
+                        <option value="" hidden>
+                            Select marital status
+                        </option>
                         {% for key in mapping_dict_swap['marital-status'] %}
                         <option value="{{key}}" {% if key == martial_stat %} selected="selected" {% endif %}>
                            {{mapping_dict_swap['marital-status'][key]}}
@@ -114,7 +135,10 @@
             <div class="form-col">
                 <div>  
                     <label for="relation">Relationship</label>
-                    <select id="relation" name="relation" class="form-control">
+                    <select id="relation" name="relation" class="form-control" required>
+                        <option value="" hidden>
+                            Select relationship
+                        </option>
                         {% for key in mapping_dict_swap['relationship'] %}
                         <option value="{{key}}" {% if key == relation %} selected="selected" {% endif %}>
                            {{mapping_dict_swap['relationship'][key]}}
@@ -132,7 +156,10 @@
             <div class="form-col">
                 <div>  
                     <label for="race">Race</label>
-                    <select id="race" name="race" class="form-control">
+                    <select id="race" name="race" class="form-control" required>
+                        <option value="" hidden>
+                            Select race
+                        </option>
                         {% for key in mapping_dict_swap['race'] %}
                         <option value="{{key}}" {% if key == race %} selected="selected" {% endif %}>
                            {{mapping_dict_swap['race'][key]}}
@@ -145,7 +172,10 @@
             <div class="form-col">
                 <div>  
                     <label for="native_country">Native Country/Territory</label>
-                    <select id="native_country" name="native_country" class="form-control">
+                    <select id="native_country" name="native_country" class="form-control" required>
+                        <option value="" hidden>
+                            Pick native country/territory
+                        </option>
                         {% for key in mapping_dict_swap['native-country'] %}
                         {% if key != "0" %}
                         <option value="{{key}}" {% if key == native_country %} selected="selected" {% endif %}>
@@ -165,14 +195,14 @@
             <div class="form-col">
                 <div>  
                     <label for="c_gain">Capital Gain </label>
-                    <input type="text" id="c_gain" name="c_gain" class="form-control" placeholder="Enter capital gain, from 0 to 99999" required value="{{ c_gain }}">
+                    <input type="number" id="c_gain" name="c_gain" class="form-control" placeholder="Enter capital gain, from 0 to 99999" required value="{{ c_gain }}" min="0" max="99999" step="1">
                 </div>
             </div>
 
             <div class="form-col">
                 <div>  
                     <label for="c_loss">Capital Loss </label>
-                    <input type="text" id="c_loss" name="c_loss" class="form-control" placeholder="Enter capital gain, from 0 to 4356" required value="{{ c_loss }}">
+                    <input type="number" id="c_loss" name="c_loss" class="form-control" placeholder="Enter capital gain, from 0 to 4356" required value="{{ c_loss }}" min="0" max="4356" step="1">
                 </div>
             </div>
 
@@ -180,7 +210,8 @@
         
         
         <div>
-            <button class="btn" type="submit">Submit</button>
+            <button class="btn" type="submit" name="button" value="submit">Submit</button>
+            <button class="btn" type="submit" name="button" value="clear" onclick="ResetInput()">Clear</button>
         </div>
 
     </form>
@@ -192,7 +223,9 @@
     <h2 class="form-header">Prediction</h2>
     <br> 
     <b>Predicted income:</b>
-    {{ prediction }}
+    <div class="form-col">
+        <input type="text" id="predicted-income" name="predicted-income" class="form-control" placeholder="Model Output" value="{{ prediction }}">
+    </div>
     <br>
 </div>
 

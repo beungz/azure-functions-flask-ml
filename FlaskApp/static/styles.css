@@ -51,14 +51,19 @@ select {
 
 .form-col {
     width: 48%; 
-    margin-bottom: 1rem; 
+    min-width: 300;
+    margin-bottom: 0.5rem; 
 }
 
 .form-row {
     display: flex;
+    flex-direction: row;
+    align-items: flex-start;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 1.5em;
     margin-top: 0;
+    margin-bottom: 0.5rem;
     margin-right: 0;
     margin-left: 0; 
     padding-right: 0;
@@ -91,12 +96,13 @@ select {
     text-align: center;
     vertical-align: middle;
     border: 0.0625rem solid transparent;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 2rem;
     font-size: 0.875rem;
     border-radius: 0.6rem;
     margin-top: 1.5rem; 
     cursor: pointer;
-
+    margin-right: 10;
+    margin-left: 10; 
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(17, 24, 39, 0.075);
     transition: all 0.2s ease;
 }
@@ -110,3 +116,10 @@ select {
     transition: all 0.3s; 
 }
 
+input:invalid {
+    box-shadow: 0 0 5px 1px lightcoral;
+}
+
+select:invalid {
+    box-shadow: 0 0 5px 1px lightcoral;
+}
