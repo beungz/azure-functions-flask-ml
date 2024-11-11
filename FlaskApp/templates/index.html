@@ -1,12 +1,19 @@
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <head></head>
-<body>
+<body onload="FocusOutput()">
 
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 <script type="text/javascript">
     function ResetInput() {
         document.getElementById("income-prediction-form").reset();
-        document.getElementById("predicted-income").value=""
+        document.getElementById("predicted-income").value="";
+    }
+    function FocusOutput() {
+        if (document.getElementById("predicted-income").value!="") {
+            document.getElementById("predicted-income").scrollIntoView();
+            document.getElementById("predicted-income").focus();
+        }
     }
 </script>
 <br>
@@ -224,7 +231,7 @@
     <br> 
     <b>Predicted income:</b>
     <div class="form-col">
-        <input type="text" id="predicted-income" name="predicted-income" class="form-control" placeholder="Model Output" value="{{ prediction }}">
+        <input type="text" id="predicted-income" name="predicted-income" class="form-control output-textbox" placeholder="Model Output" value="{{ prediction }}" readonly>
     </div>
     <br>
 </div>
