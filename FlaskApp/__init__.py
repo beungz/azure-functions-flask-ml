@@ -11,58 +11,18 @@ import tempfile
 import os
 
 
-"""SECTION 1: Data Preprocessing and Model Training"""
+filepath = 'model.joblib'
 
-# Load dataset
-url = "adult.csv"
-df = pd.read_csv(url)
+mapping_dict_swap = {'workclass': {'0': ' ?', '1': ' Federal-gov', '2': ' Local-gov', '3': ' Never-worked', '4': ' Private', '5': ' Self-emp-inc', '6': ' Self-emp-not-inc', '7': ' State-gov', '8': ' Without-pay'}, 
+                    'race': {'0': ' Amer-Indian-Eskimo', '1': ' Asian-Pac-Islander', '2': ' Black', '3': ' Other', '4': ' White'}, 
+                    'education': {'0': ' 10th', '1': ' 11th', '2': ' 12th', '3': ' 1st-4th', '4': ' 5th-6th', '5': ' 7th-8th', '6': ' 9th', '7': ' Assoc-acdm', '8': ' Assoc-voc', '9': ' Bachelors', '10': ' Doctorate', '11': ' HS-grad', '12': ' Masters', '13': ' Preschool', '14': ' Prof-school', '15': ' Some-college'}, 
+                    'marital-status': {'0': ' Divorced', '1': ' Married-AF-spouse', '2': ' Married-civ-spouse', '3': ' Married-spouse-absent', '4': ' Never-married', '5': ' Separated', '6': ' Widowed'}, 
+                    'occupation': {'0': ' ?', '1': ' Adm-clerical', '2': ' Armed-Forces', '3': ' Craft-repair', '4': ' Exec-managerial', '5': ' Farming-fishing', '6': ' Handlers-cleaners', '7': ' Machine-op-inspct', '8': ' Other-service', '9': ' Priv-house-serv', '10': ' Prof-specialty', '11': ' Protective-serv', '12': ' Sales', '13': ' Tech-support', '14': ' Transport-moving'}, 
+                    'relationship': {'0': ' Husband', '1': ' Not-in-family', '2': ' Other-relative', '3': ' Own-child', '4': ' Unmarried', '5': ' Wife'}, 
+                    'gender': {'0': ' Female', '1': ' Male'}, 
+                    'native-country': {'0': ' ?', '1': ' Cambodia', '2': ' Canada', '3': ' China', '4': ' Columbia', '5': ' Cuba', '6': ' Dominican-Republic', '7': ' Ecuador', '8': ' El-Salvador', '9': ' England', '10': ' France', '11': ' Germany', '12': ' Greece', '13': ' Guatemala', '14': ' Haiti', '15': ' Holand-Netherlands', '16': ' Honduras', '17': ' Hong', '18': ' Hungary', '19': ' India', '20': ' Iran', '21': ' Ireland', '22': ' Italy', '23': ' Jamaica', '24': ' Japan', '25': ' Laos', '26': ' Mexico', '27': ' Nicaragua', '28': ' Outlying-US(Guam-USVI-etc)', '29': ' Peru', '30': ' Philippines', '31': ' Poland', '32': ' Portugal', '33': ' Puerto-Rico', '34': ' Scotland', '35': ' South', '36': ' Taiwan', '37': ' Thailand', '38': ' Trinadad&Tobago', '39': ' United-States', '40': ' Vietnam', '41': ' Yugoslavia'}, 
+                    'income': {'0': ' <=50K', '1': ' >50K'}}
 
-# Fill missing values
-col_names = df.columns
-for c in col_names:
-    df[c] = df[c].replace("?", np.nan)
-df = df.apply(lambda x:x.fillna(x.value_counts().index[0]))
-
-# Discretisation
-df.replace(['Divorced', 'Married-AF-spouse', 
-              'Married-civ-spouse', 'Married-spouse-absent', 
-              'Never-married','Separated','Widowed'],
-             ['divorced','married','married','married',
-              'not married','not married','not married'], inplace = True)
-
-# Label Encoder
-category_col =['workclass', 'race', 'education','marital-status', 'occupation','relationship', 'gender', 'native-country', 'income'] 
-labelEncoder = preprocessing.LabelEncoder()
-
-# Create a map of all the numerical values of each categorical labels.
-mapping_dict={}
-for col in category_col:
-    df[col] = labelEncoder.fit_transform(df[col])
-    le_name_mapping = dict(zip(labelEncoder.classes_, labelEncoder.transform(labelEncoder.classes_)))
-    mapping_dict[col]=le_name_mapping
-
-mapping_dict_swap={}
-for key, value in mapping_dict.items():
-    mapping_dict_swap[key] = {str(v): k for k, v in mapping_dict[key].items()}
-
-# Drop redundant columns
-df=df.drop(['fnlwgt','educational-num'], axis=1)
-
-X = df.values[:, 0:12]
-Y = df.values[:,12]
-
-X_train, X_test, y_train, y_test = train_test_split( X, Y, test_size = 0.3, random_state = 100)
-dt_clf_gini = DecisionTreeClassifier(criterion = "gini", random_state = 100,max_depth=5, min_samples_leaf=5)
-dt_clf_gini.fit(X_train, y_train)
-
-# Save the model to model.joblib
-local_path = tempfile.gettempdir()
-filepath = os.path.join(local_path, 'model.joblib')
-joblib.dump(dt_clf_gini, filepath)
-
-
-
-"""SECTION 2: Flask App and Inference"""
 # Create Flask object "flask_app"
 flask_app = Flask(__name__)
 
