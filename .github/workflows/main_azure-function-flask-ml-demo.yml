@@ -5,10 +5,10 @@
 name: Build and deploy Python project to Azure Function App - azure-function-flask-ml-demo
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
