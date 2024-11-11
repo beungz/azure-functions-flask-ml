@@ -1,18 +1,10 @@
 from flask import Flask, render_template, request
-
 import numpy as np
-import pandas as pd
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-
 import joblib
-import tempfile
-import os
 
 
 filepath = 'model.joblib'
-
+# Dictionary mapping option value and option text
 mapping_dict_swap = {'workclass': {'0': ' ?', '1': ' Federal-gov', '2': ' Local-gov', '3': ' Never-worked', '4': ' Private', '5': ' Self-emp-inc', '6': ' Self-emp-not-inc', '7': ' State-gov', '8': ' Without-pay'}, 
                     'race': {'0': ' Amer-Indian-Eskimo', '1': ' Asian-Pac-Islander', '2': ' Black', '3': ' Other', '4': ' White'}, 
                     'education': {'0': ' 10th', '1': ' 11th', '2': ' 12th', '3': ' 1st-4th', '4': ' 5th-6th', '5': ' 7th-8th', '6': ' 9th', '7': ' Assoc-acdm', '8': ' Assoc-voc', '9': ' Bachelors', '10': ' Doctorate', '11': ' HS-grad', '12': ' Masters', '13': ' Preschool', '14': ' Prof-school', '15': ' Some-college'}, 
@@ -48,7 +40,7 @@ def index():
         hours_per_week = request.form['hours_per_week']
         native_country = request.form['native_country']
 
-        # Make dataFrame for model
+        # Make dataFrame and run pre-trained model with the given inputs
         to_predict_list = {'age': age, 'workclass': w_class, 'education': edu, 'marital-status': martial_stat, 'occupation': occup, 'relationship': relation, 'race': race, 'gender': gender, 'capital-gain': c_gain, 'capital-loss': c_loss, 'hours-per-week': hours_per_week, 'native-country': native_country}
         to_predict_list=list(to_predict_list.values())
         to_predict_list = list(map(int, to_predict_list))
@@ -71,7 +63,7 @@ def index():
 
 
 def ValuePredictor(to_predict_list):
-    """Prediction function"""
+    """Prediction function: return predicted income for a given set of inputs"""
     to_predict = np.array(to_predict_list).reshape(1,12)
     # Load the pre-trained model
     loaded_model = joblib.load(filepath)
