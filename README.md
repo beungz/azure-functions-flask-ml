@@ -8,13 +8,10 @@ The front end is based on Flask Framework with CSS stylesheet.
 <br>
 <br>
 
-
 Requirements:<br>
 ```
 azure-functions
-pandas==2.2.3
 numpy==2.1.3
-scikit-learn==1.5.2
 flask==3.0.3
 ```
 <br>
@@ -42,3 +39,7 @@ You should see output like this.
 ```
 Predicted income: Income more than 50K 
 ```
+
+#### **How to run the code on Azure**
+***
+To run the code, please go to [https://ml-flask-azure-functions-deploy.azurewebsites.net/]()
