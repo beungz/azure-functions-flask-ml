@@ -42,4 +42,4 @@ Predicted income: Income more than 50K
 
 #### **How to run the code on Azure**
 ***
-To run the code, please go to [https://ml-flask-azure-functions-deploy.azurewebsites.net/]()
+To run the code, please go to [https://ml-flask-azure-functions-deploy.azurewebsites.net/](https://ml-flask-azure-functions-deploy.azurewebsites.net/)
